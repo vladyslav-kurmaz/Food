@@ -177,35 +177,35 @@ window.addEventListener('DOMContentLoaded', () => {
         if (strDay != '11' && strDay[strDay.length -1] == '1') {
               dayElem.textContent = 'день';
             } else if (strDay == '12' || strDay == '13' || strDay == '14'){
-              dayElem.textContent = 'дней';
+              dayElem.textContent = 'днів';
             } else if (strDay[strDay.length -1] == '2' || strDay[strDay.length -1] == '3' ||
               strDay[strDay.length -1] == '4') {
                 dayElem.textContent = 'дня';
             } else {
-              dayElem.textContent = 'дней';
+              dayElem.textContent = 'днів';
             }
 
         if (strHour != '11' && strHour[strHour.length -1] == '1' ) {
-              hourElem.textContent = 'час';
+              hourElem.textContent = 'година';
             } else if (strHour == '12' || strHour == '13' || strHour == '14'){
-              hourElem.textContent = 'часов';
+              hourElem.textContent = 'годин';
             } else if (strHour[strHour.length -1] == '2' || strHour[strHour.length -1] == '3' ||
               strHour[strHour.length -1] == '4') {
-                hourElem.textContent = 'часа';
+                hourElem.textContent = 'години';
     
             } else {
-              hourElem.textContent = 'часов';
+              hourElem.textContent = 'годин';
             }
 
         if (strMin != '11' && strMin[strMin.length -1] == '1') {
-              minElem.textContent = 'минута';
+              minElem.textContent = 'хвилина';
             } else if (strMin == '12' || strMin == '13' || strMin == '14'){
-              minElem.textContent = 'минут';
+              minElem.textContent = 'хвилин';
             } else if (strMin[strMin.length -1] == '2' || strMin[strMin.length -1] == '3' ||
               strMin[strMin.length -1] == '4') {
-                minElem.textContent = 'минуты';
+                minElem.textContent = 'хвилини';
             } else {
-              minElem.textContent = 'минут';
+              minElem.textContent = 'хвилин';
             }   
             
         if ( strSec != '11' && strSec[strSec.length -1] == '1') {
@@ -214,7 +214,7 @@ window.addEventListener('DOMContentLoaded', () => {
               secElem.textContent = 'секунд';
             } else if (strSec[strSec.length -1] == '2' || strSec[strSec.length -1] == '3' || 
               strSec[strSec.length -1] == '4') {
-                secElem.textContent = 'секунды';
+                secElem.textContent = 'секунди';
             } else {
               secElem.textContent = 'секунд';
             }
@@ -332,10 +332,10 @@ window.addEventListener('DOMContentLoaded', () => {
   new MenuCard(
           '"img/tabs/vegy.jpg"',
           '"vegy"',
-          '"Фитнес"', 
-          `Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов.
-            Продукт активных и здоровых людей. Это абсолютно новый продукт 
-            с оптимальной ценой и высоким качеством!`,
+          '"Фітнес"', 
+          `Меню "Фітнес" - це новий підхід до приготування страв: більше свіжих овочів та фруктів.
+          Продукт активних та здорових людей. Це абсолютно новий продукт
+          з оптимальною ціною та високою якістю!`,
             6,
             '.menu .container',
                        
@@ -344,10 +344,10 @@ window.addEventListener('DOMContentLoaded', () => {
   new MenuCard(
             '"img/tabs/elite.jpg"', 
             '"elite"',
-            '“Премиум”', 
-            `В меню “Премиум” мы используем не только красивый дизайн упаковки, 
-            но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты 
-            - ресторанное меню без похода в ресторан!`,
+            '“Преміум”', 
+            `У меню “Преміум” ми використовуємо не тільки гарний дизайн упаковки,
+            а й якісне виконання страв. Червона риба, морепродукти, фрукти
+            - ресторанне меню без походу в ресторан!`,
             16,
             '.menu .container',
                     
@@ -356,15 +356,71 @@ window.addEventListener('DOMContentLoaded', () => {
   new MenuCard(
             '"img/tabs/post.jpg"', 
             '"post"',
-            '"Постное"', 
-            `Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов
-              животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество 
-              белков за счет тофу и импортных вегетарианских стейков.`, 
+            '"Пісне"', 
+            `Меню "Пісне" - це ретельний підбір інгредієнтів: повна відсутність продуктів
+            тваринного походження, молоко з мигдалю, вівса, кокосу чи гречки, правильна кількість
+            білків за рахунок тофу та імпортних вегетаріанських стейків.`, 
             10.8, 
             '.menu .container',
             'menu__item',
                     
   ).render();
 
-});
+// Forms request
 
+const forms = document.querySelectorAll('form');
+
+forms.forEach(item => {
+  postRequest(item);
+});    
+
+function postRequest (form) {
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const messege = {
+      loading: 'Завантаження...',
+      success: `Все успішно! ми перетелефонуємо пізніше`,
+      error: 'Щось пішло не так, спробуйте пізніше'
+    };
+
+    let statusMessage = document.createElement('div');
+    statusMessage.textContent = messege.loading;
+    statusMessage.classList.add('status');
+    form.append(statusMessage);
+
+    const request = new XMLHttpRequest();   
+    request.open('POST', 'server.php');
+
+
+    //Заголовок тільки для типу JSON; 
+    // request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+    const formData = new FormData(form);
+    
+    //для JSON, якщо потрібно на бек PHP, JSON файл відправлять тоді ця контрукція 
+    // const object = {};
+    // formData.forEach(function(value, key) {
+    //   object[key] = value;
+    // });
+
+    // const json = JSON.stringify(object);
+    // request.send(json);
+
+    request.send(formData);
+
+    request.addEventListener('load', () => {
+      if (request.status === 200) {
+        console.log(request.response);
+        statusMessage.textContent = messege.success;
+        form.reset();
+        setTimeout(function() {
+          statusMessage.remove();
+        }, 2000);
+      } else {
+        statusMessage.textContent = messege.error;
+        
+      }
+    });
+  }); 
+}
+});
