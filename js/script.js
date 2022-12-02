@@ -366,7 +366,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     
   ).render();
 
-});
+
   // Forms request
 
   const forms = document.querySelectorAll('form');
@@ -424,3 +424,4 @@ window.addEventListener('DOMContentLoaded', () => {
       });
     }); 
   }
+});
