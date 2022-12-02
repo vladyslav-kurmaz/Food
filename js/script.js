@@ -366,61 +366,61 @@ window.addEventListener('DOMContentLoaded', () => {
                     
   ).render();
 
-// Forms request
-
-const forms = document.querySelectorAll('form');
-
-forms.forEach(item => {
-  postRequest(item);
-});    
-
-function postRequest (form) {
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const messege = {
-      loading: 'Завантаження...',
-      success: `Все успішно! ми перетелефонуємо пізніше`,
-      error: 'Щось пішло не так, спробуйте пізніше'
-    };
-
-    let statusMessage = document.createElement('div');
-    statusMessage.textContent = messege.loading;
-    statusMessage.classList.add('status');
-    form.append(statusMessage);
-
-    const request = new XMLHttpRequest();   
-    request.open('POST', 'server.php');
-
-
-    //Заголовок тільки для типу JSON; 
-    // request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-    const formData = new FormData(form);
-    
-    //для JSON, якщо потрібно на бек PHP, JSON файл відправлять тоді ця контрукція 
-    // const object = {};
-    // formData.forEach(function(value, key) {
-    //   object[key] = value;
-    // });
-
-    // const json = JSON.stringify(object);
-    // request.send(json);
-
-    request.send(formData);
-
-    request.addEventListener('load', () => {
-      if (request.status === 200) {
-        console.log(request.response);
-        statusMessage.textContent = messege.success;
-        form.reset();
-        setTimeout(function() {
-          statusMessage.remove();
-        }, 2000);
-      } else {
-        statusMessage.textContent = messege.error;
-        
-      }
-    });
-  }); 
-}
 });
+  // Forms request
+
+  const forms = document.querySelectorAll('form');
+
+  forms.forEach(item => {
+    postRequest(item);
+  });    
+
+  function postRequest (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const messege = {
+        loading: 'Завантаження...',
+        success: `Все успішно! ми перетелефонуємо пізніше`,
+        error: 'Щось пішло не так, спробуйте пізніше'
+      };
+
+      let statusMessage = document.createElement('div');
+      statusMessage.textContent = messege.loading;
+      statusMessage.classList.add('status');
+      form.append(statusMessage);
+
+      const request = new XMLHttpRequest();   
+      request.open('POST', 'server.php');
+
+
+      //Заголовок тільки для типу JSON; 
+      // request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+      const formData = new FormData(form);
+      
+      //для JSON, якщо потрібно на бек PHP, JSON файл відправлять тоді ця контрукція 
+      // const object = {};
+      // formData.forEach(function(value, key) {
+      //   object[key] = value;
+      // });
+
+      // const json = JSON.stringify(object);
+      // request.send(json);
+
+      request.send(formData);
+
+      request.addEventListener('load', () => {
+        if (request.status === 200) {
+          console.log(request.response);
+          statusMessage.textContent = messege.success;
+          form.reset();
+          setTimeout(function() {
+            statusMessage.remove();
+          }, 2000);
+        } else {
+          statusMessage.textContent = messege.error;
+          
+        }
+      });
+    }); 
+  }
