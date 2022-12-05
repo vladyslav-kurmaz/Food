@@ -239,13 +239,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Тут описано відкриття модального блоку
 
-  const modalWindow = document.querySelector('.modal'),
+  const modal = document.querySelector('.modal'),
         btnConect = document.querySelectorAll('[data-modal]'),
         modalCloseBtn = document.querySelector('[data-close]');
 
   function openModal() {
-    modalWindow.classList.add('show', 'fade');
-    modalWindow.classList.remove('hide');
+    modal.classList.add('show', 'fade');
+    modal.classList.remove('hide');
     document.body.style.overflow = 'hidden';
     // clearInterval(timerModal);
   }
@@ -255,21 +255,19 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   function closeModal() {
-    modalWindow.classList.add('hide');
-    modalWindow.classList.remove('show', 'fade');
+    modal.classList.add('hide');
+    modal.classList.remove('show', 'fade');
     document.body.style.overflow = '';
   }
 
-  modalCloseBtn.addEventListener('click', closeModal);
-
-  modalWindow.addEventListener('click', (e) => { 
-    if (e.target === modalWindow) {
+  modal.addEventListener('click', (e) => { 
+    if (e.target === modal || e.target.getAttribute('data-close') === '') {
       closeModal();
     }
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.code === 'Escape' && modalWindow.classList.contains('show')) {
+    if (e.code === 'Escape' && modal.classList.contains('show')) {
       closeModal();
     }
   });
@@ -380,21 +378,23 @@ window.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
 
       const messege = {
-        loading: 'Завантаження...',
-        success: `Все успішно! ми перетелефонуємо пізніше`,
+        loading: 'img/modal/spinner.svg',
+        succes: `Все успішно! Ми перетелефонуємо Вам пізніше`,
         error: 'Щось пішло не так, спробуйте пізніше'
       };
 
-      let statusMessage = document.createElement('div');
-      statusMessage.textContent = messege.loading;
-      statusMessage.classList.add('status');
-      form.append(statusMessage);
+      let statusMessage = document.createElement('img');
+      statusMessage.src = messege.loading;
+      statusMessage.style.cssText = `
+        display: block;
+        margin: 0 auto;
+      `;
+      
+      form.insertAdjacentElement('afterend', statusMessage);
 
       const request = new XMLHttpRequest();   
       request.open('POST', 'server.php');
 
-
-      //Заголовок тільки для типу JSON; 
       // request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
       const formData = new FormData(form);
       
@@ -412,16 +412,37 @@ window.addEventListener('DOMContentLoaded', () => {
       request.addEventListener('load', () => {
         if (request.status === 200) {
           console.log(request.response);
-          statusMessage.textContent = messege.success;
+          statusMessage.remove();
+          formMessege(messege.succes);
           form.reset();
-          setTimeout(function() {
-            statusMessage.remove();
-          }, 2000);
+
         } else {
-          statusMessage.textContent = messege.error;
-          
+          formMessege(messege.error);
         }
       });
     }); 
+  }
+
+  function formMessege(messege) {
+    const modalDialog = document.querySelector('.modal__dialog');
+          
+    modalDialog.classList.add('hide');
+    openModal();
+
+    let messegeDialog = document.createElement('div');
+    messegeDialog.classList.add('modal__dialog', 'show');
+    messegeDialog.innerHTML = `
+      <div class="modal__content">
+        <div data-close class="modal__close">×</div>
+        <div class="modal__title">${messege}</div>
+      </div>`;
+
+      modal.append(messegeDialog);
+      
+    setTimeout(function() {
+      messegeDialog.remove();
+      modalDialog.classList.remove('hide');
+      modalDialog.classList.add('show');      
+    }, 4000);
   }
 });
