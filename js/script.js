@@ -365,7 +365,7 @@ window.addEventListener('DOMContentLoaded', () => {
   ).render();
 
 
-  // Forms request
+  //  Form request
 
   const forms = document.querySelectorAll('form');
 
@@ -392,34 +392,34 @@ window.addEventListener('DOMContentLoaded', () => {
       
       form.insertAdjacentElement('afterend', statusMessage);
 
-      const request = new XMLHttpRequest();   
-      request.open('POST', 'server.php');
-
-      // request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
       const formData = new FormData(form);
       
       //для JSON, якщо потрібно на бек PHP, JSON файл відправлять тоді ця контрукція 
       // const object = {};
       // formData.forEach(function(value, key) {
       //   object[key] = value;
-      // });
+      // });      
 
-      // const json = JSON.stringify(object);
-      // request.send(json);
-
-      request.send(formData);
-
-      request.addEventListener('load', () => {
-        if (request.status === 200) {
-          console.log(request.response);
-          statusMessage.remove();
-          formMessege(messege.succes);
-          form.reset();
-
-        } else {
-          formMessege(messege.error);
-        }
+      fetch('server.php', {
+        method: 'POST',
+        // headers: {'Content-type':'application/json; charset=utf-8'}, //заголовки тільки для JSON формату
+        // body: JSON.stringify(object), //formData в JSON формат
+        body: formData,
+      })
+      .then(data => data.text())
+      .then((data) => {
+        console.log(data);
+        statusMessage.remove();
+        formMessege(messege.succes);
+      })
+      .catch(() => {
+        formMessege(messege.error);
+        statusMessage.remove();
+      })
+      .finally(() => {
+        form.reset();
       });
+
     }); 
   }
 
@@ -442,7 +442,9 @@ window.addEventListener('DOMContentLoaded', () => {
     setTimeout(function() {
       messegeDialog.remove();
       modalDialog.classList.remove('hide');
-      modalDialog.classList.add('show');      
+      modalDialog.classList.add('show'); 
+      closeModal();     
     }, 4000);
   }
+
 });
