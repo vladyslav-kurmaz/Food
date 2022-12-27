@@ -839,9 +839,7 @@ window.addEventListener('DOMContentLoaded', () => {
     mainImgWrapper: '.offer__slider-wrapper',
     sliderList: '.offer__slider-inner'
   });
-
 });
-
 })();
 
 /******/ })()
